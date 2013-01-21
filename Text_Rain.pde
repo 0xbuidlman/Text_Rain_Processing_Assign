@@ -13,7 +13,7 @@ PImage prevFrame;
 void setup() {
   size(800, 800); 
   String[] cameras = Capture.list();
-  println("Start");
+  println("Starting");
 
   Letter testLetter = new Letter("a");
   drops = new Letter[1];
