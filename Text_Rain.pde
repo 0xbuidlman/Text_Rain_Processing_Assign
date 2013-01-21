@@ -11,7 +11,6 @@ int dropsLength;
 PImage prevFrame;
 
 void setup() {
-  size(800, 800); 
   String[] cameras = Capture.list();
   println("Starting");
 
@@ -21,6 +20,7 @@ void setup() {
 
   if (cameras.length == 0) {
     println("There are no cameras available...");
+    size(400, 400);
     exit();
   }
   else {
@@ -28,10 +28,12 @@ void setup() {
     for (int i = 0; i < cameras.length; i++) {
       println(cameras[i]);
     }
-    cam = new Capture(this, cameras[0]);
+    cam = new Capture(this, 1200, 800);
     cam.start();
     cam.loadPixels();
-    prevFrame.copy(cam, 0, 0, cam.width, cam.height, 0, 0, cam.width, cam.height);
+    
+    size(1200, 800); 
+    //prevFrame.copy(cam, 0, 0, cam.width, cam.height, 0, 0, cam.width, cam.height);
   }
   dropsLength = drops.length;
 }
@@ -43,12 +45,24 @@ void draw() {
   set(0, 0, cam);
   for (int i = 0; i < dropsLength; i++) {
     //println(drops[i].textLetter);
-    int loc = drops[i].xpos + drops[i].ypos*cam.width;
-    color 
-    
-    
-    drops[i].updateLetter();
-    
+    //println("LOCS: x = " + drops[i].xpos + ", y = " + drops[i].ypos);  
+    int loc = drops[i].xpos + (drops[i].ypos*1200);
+    fill(#222222);
+    rect(drops[i].xpos, drops[i].ypos, 50, 50);
+    //color 
+    float bright = brightness(cam.pixels[loc]);
+    //println(bright + ", " + loc);
+    if(bright > 100) {
+      println("YAY: " + bright);
+      drops[i].updateLetter(); 
+    }
+    else {
+      println("NO: " + bright);
+    }
+    //filter(THRESHOLD, 0.5);
+    //drops[i].updateLetter();
+    drops[i].drawLetter();
+    cam.updatePixels();
   }
   //image(cam, 0, 0);
 }
