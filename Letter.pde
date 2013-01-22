@@ -1,21 +1,33 @@
 class Letter {
   int xpos;
   int ypos;  
-  String textLetter;
-  Letter(String inputText) {
+  char textLetter;
+  int upSpeed;
+  Letter(char inputText) {
     xpos = 100;
     ypos = 20;
     textLetter = inputText;
-    textSize(32); 
+    textSize(32);
+    upSpeed = 1; 
   }
   void drawLetter() {
     fill(#591818);
     text(textLetter, xpos, ypos);
   }
   
-  void updateLetter() {
+  void dropLetter() {
     ypos++;
   }
   
+  void liftLetter() {
+    println("*******lift");
+    int newY = ypos - upSpeed;
+    if(newY >= 0) {
+      ypos = newY; 
+    }
+    else {
+      ypos = 0; 
+    }
+  }
   
 }
