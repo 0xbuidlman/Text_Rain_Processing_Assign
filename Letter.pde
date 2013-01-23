@@ -7,7 +7,7 @@ class Letter {
     xpos = 100;
     ypos = 20;
     textLetter = inputText;
-    textSize(32);
+    textSize(16);
     upSpeed = 1; 
   }
   void drawLetter() {

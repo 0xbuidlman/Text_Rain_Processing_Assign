@@ -12,7 +12,7 @@ PImage prevFrame;
 int sWidth = 1200;
 int sHeight = 800;
 int threshold = 140;
-String inputString = "Welcome to TextRain.";
+String inputString = "Rain, rain, go away; come again some other day.";
 char[] inputLetters;
 
 void setup() {
