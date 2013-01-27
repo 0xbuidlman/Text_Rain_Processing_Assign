@@ -29,7 +29,6 @@ void setup() {
   for (int i = 0; i < dupStrings; i++) {
     for (int j = 0; j < inputLetters.length; j++) {  
       Letter testLetter = new Letter(inputLetters[j]);
-      //println("Spawn pos of " + inputLetters[j] + ": " + spawnPos);
       testLetter.xpos = spawnPos;
       testLetter.ypos -= addLineHeight;
       drops[i][j] = testLetter;
@@ -58,7 +57,6 @@ void setup() {
     size(sWidth, sHeight);
   }
   dropsLength = inputString.length();
-  println("DROPS LENGTH: " + dropsLength);
 }
 
 void splitString() {
@@ -75,7 +73,6 @@ void draw() {
   println("Dupstrings len: " + dupStrings);
   for (int i = 0; i < dupStrings; i++) {
     for (int j = 0; j < dropsLength; j++) {
-      //println("Looking at " + drops[i][j].textLetter);
       if (drops[i][j].ypos < sHeight && drops[i][j].ypos > 0) {    
         int loc = drops[i][j].xpos + (drops[i][j].ypos*sWidth);
         float bright = brightness(cam.pixels[loc]);
@@ -96,7 +93,6 @@ void draw() {
       }
       else {
         drops[i][j].dropLetter(); 
-        //println("Dropping " + i + ", "+ j + ": " + drops[i][j]);
       }
 
       drops[i][j].drawLetter();
