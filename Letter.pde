@@ -3,31 +3,42 @@ class Letter {
   int ypos;  
   char textLetter;
   int upSpeed;
+  int alpha = 255;
   Letter(char inputText) {
     xpos = 100;
-    ypos = 20;
+    ypos = int(random(-350, 0));
     textLetter = inputText;
     textSize(16);
-    upSpeed = 1; 
+    upSpeed = 1;
   }
   void drawLetter() {
-    fill(#591818);
+    fill(166, 020, 020, alpha);
     text(textLetter, xpos, ypos);
   }
-  
+
+  void letterFade() {
+    alpha -= 5;
+    if(alpha <= 0) {
+      ypos = int(random(-350, 0));
+      alpha = 255; 
+    }
+  }
+
   void dropLetter() {
     ypos++;
+    if (ypos > 730) {
+      letterFade();
+    }
   }
-  
+
   void liftLetter() {
-    println("*******lift");
     int newY = ypos - upSpeed;
-    if(newY >= 0) {
-      ypos = newY; 
+    if (newY >= 0) {
+      ypos = newY;
     }
     else {
-      ypos = 0; 
+      ypos = 0;
     }
   }
-  
 }
+

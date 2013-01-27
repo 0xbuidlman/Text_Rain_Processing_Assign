@@ -6,7 +6,7 @@
  */
 import processing.video.*;
 Capture cam;
-Letter[] drops;
+Letter[][] drops;
 int dropsLength;
 PImage prevFrame;
 int sWidth = 1200;
@@ -14,21 +14,31 @@ int sHeight = 800;
 int threshold = 140;
 String inputString = "Rain, rain, go away; come again some other day.";
 char[] inputLetters;
+int dupStrings = 5;
 
 void setup() {
   String[] cameras = Capture.list();
 
-  drops = new Letter[inputString.length()];//[inputString.length()];
+  drops = new Letter[dupStrings][inputString.length()];//[inputString.length()];
   int inc = sWidth/inputString.length();
   int spawnPos = 5;
   inputLetters = new char[inputString.length()];
   splitString();
-  
-  for(int i = 0; i < inputLetters.length; i++) {
-    Letter testLetter = new Letter(inputLetters[i]);
-    testLetter.xpos = spawnPos;
-    drops[i] = testLetter;
-    spawnPos += inc;
+
+  int addLineHeight = 0;
+  for (int i = 0; i < dupStrings; i++) {
+    for (int j = 0; j < inputLetters.length; j++) {  
+      Letter testLetter = new Letter(inputLetters[j]);
+      //println("Spawn pos of " + inputLetters[j] + ": " + spawnPos);
+      testLetter.xpos = spawnPos;
+      testLetter.ypos -= addLineHeight;
+      drops[i][j] = testLetter;
+      spawnPos += inc;
+      if (spawnPos >= sWidth-inc) {
+        spawnPos = 5;
+      }
+    }
+    addLineHeight += 50;
   }
 
   if (cameras.length == 0) {
@@ -44,15 +54,15 @@ void setup() {
     cam = new Capture(this, sWidth, sHeight);
     cam.start();
     cam.loadPixels();
-    
-    size(sWidth, sHeight); 
-    //prevFrame.copy(cam, 0, 0, cam.width, cam.height, 0, 0, cam.width, cam.height);
+
+    size(sWidth, sHeight);
   }
-  dropsLength = drops.length;
+  dropsLength = inputString.length();
+  println("DROPS LENGTH: " + dropsLength);
 }
 
 void splitString() {
-  for(int i = 0; i < inputString.length(); i++) {
+  for (int i = 0; i < inputString.length(); i++) {
     inputLetters[i] = inputString.charAt(i);
   }
 }
@@ -62,33 +72,36 @@ void draw() {
     cam.read();
   } 
   set(0, 0, cam);
-  for (int i = 0; i < dropsLength; i++) {
-    //println(drops[i].textLetter);
-    //println("LOCS: x = " + drops[i].xpos + ", y = " + drops[i].ypos);
-    if(drops[i].ypos < sHeight) {    
-      int loc = drops[i].xpos + (drops[i].ypos*sWidth);
-      float bright = brightness(cam.pixels[loc]);
-      if(bright > threshold) {
-        println("YAY: " + bright);
-        drops[i].dropLetter();
-        drops[i].upSpeed = 1;
-      }
-      else {
-        println("NO: " + bright);
-        if(drops[i].ypos > 0) {
-          int aboveLoc = loc = drops[i].xpos + ((drops[i].ypos)-1)*sWidth;
-          float aboveBright = brightness(cam.pixels[aboveLoc]);
-          if(aboveBright < threshold) {
-            println("LIFT");
-            drops[i].liftLetter();
-            drops[i].upSpeed = drops[i].upSpeed * 2;
+  println("Dupstrings len: " + dupStrings);
+  for (int i = 0; i < dupStrings; i++) {
+    for (int j = 0; j < dropsLength; j++) {
+      //println("Looking at " + drops[i][j].textLetter);
+      if (drops[i][j].ypos < sHeight && drops[i][j].ypos > 0) {    
+        int loc = drops[i][j].xpos + (drops[i][j].ypos*sWidth);
+        float bright = brightness(cam.pixels[loc]);
+        if (bright > threshold) {
+          drops[i][j].dropLetter();
+          drops[i][j].upSpeed = 1;
+        }
+        else {
+          if (drops[i][j].ypos > 0) {
+            int aboveLoc = loc = drops[i][j].xpos + ((drops[i][j].ypos)-1)*sWidth;
+            float aboveBright = brightness(cam.pixels[aboveLoc]);
+            if (aboveBright < threshold) {
+              drops[i][j].liftLetter();
+              drops[i][j].upSpeed = drops[i][j].upSpeed * 2;
+            }
           }
         }
       }
+      else {
+        drops[i][j].dropLetter(); 
+        //println("Dropping " + i + ", "+ j + ": " + drops[i][j]);
+      }
+
+      drops[i][j].drawLetter();
+      cam.updatePixels();
     }
-   
-    drops[i].drawLetter();
-    cam.updatePixels();
   }
 }
 
