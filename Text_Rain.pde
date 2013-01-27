@@ -14,7 +14,7 @@ int sHeight = 800;
 int threshold = 140;
 String inputString = "Rain, rain, go away; come again some other day.";
 char[] inputLetters;
-int dupStrings = 5;
+int dupStrings = 10;
 
 void setup() {
   String[] cameras = Capture.list();

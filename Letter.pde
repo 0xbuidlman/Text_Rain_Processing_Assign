@@ -6,7 +6,7 @@ class Letter {
   int alpha = 255;
   Letter(char inputText) {
     xpos = 100;
-    ypos = int(random(-350, 0));
+    ypos = int(random(-1050, 0));
     textLetter = inputText;
     textSize(16);
     upSpeed = 1;
